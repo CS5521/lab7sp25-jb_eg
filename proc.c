@@ -547,3 +547,7 @@ procdump(void)
     cprintf("\n");
   }
 }
+
+void fillpstat(pstatTable * ptr) {
+  
+}

@@ -91,6 +91,7 @@ sys_uptime(void)
 }
 
 // starting the implementation
+extern void fillpstat(struct pstatTable *);
 int 
 sys_getpinfo(void)
 {

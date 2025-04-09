@@ -14,7 +14,9 @@ typedef struct {
 
 typedef pstat_t pstatTable[NPROC];
 
-extern void fillpstat(pstatTable *);
+// extern void fillpstat(pstatTable *);
+// dont need this function here because the prototype is in sysproc.c 
+
 void getpinfo(pstatTable *);
 
 #endif

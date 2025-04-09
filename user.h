@@ -25,7 +25,8 @@ int sleep(int);
 int uptime(void);
 
 // added getpinfo 
-int getpinfo(struct pstatTable *);
+// int getpinfo(struct pstatTable *);
+// dont need this here because it is declared in pstat.h
 
 // ulib.c
 int stat(const char*, struct stat*);
