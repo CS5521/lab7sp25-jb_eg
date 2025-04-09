@@ -89,3 +89,10 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+// starting the implementation
+int 
+sys_getpinfo(struct pstat * ptr)
+{
+  
+}

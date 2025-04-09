@@ -24,6 +24,9 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 
+// added getpinfo 
+int getpinfo(struct pstat * ptr);
+
 // ulib.c
 int stat(const char*, struct stat*);
 char* strcpy(char*, const char*);
