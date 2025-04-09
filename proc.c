@@ -7,6 +7,9 @@
 #include "proc.h"
 #include "spinlock.h"
 
+// including pstat.h
+#include "pstat.h" 
+
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];
@@ -139,6 +142,10 @@ userinit(void)
   p->tf->esp = PGSIZE;
   p->tf->eip = 0;  // beginning of initcode.S
 
+  // added in for setting ticks and tickets to 0 and 10
+  p->ticks = 0;
+  p->tickets = 10;
+
   safestrcpy(p->name, "initcode", sizeof(p->name));
   p->cwd = namei("/");
 
@@ -202,6 +209,14 @@ fork(void)
 
   // Clear %eax so that fork returns 0 in the child.
   np->tf->eax = 0;
+
+  // added to set ticks and tickets for the new process
+  np->ticks = 0;
+  if (curproc->tickets > 10) {
+    np->tickets = curproc->tickets;
+  } else {
+    np->tickets = 10;
+  }
 
   for(i = 0; i < NOFILE; i++)
     if(curproc->ofile[i])
