@@ -106,7 +106,7 @@ extern int sys_uptime(void);
 
 
 // will try it as an extern in first
-extern int sys_getpinfo(struct pstat * ptr);
+extern int sys_getpinfo(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,

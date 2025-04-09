@@ -92,7 +92,7 @@ sys_uptime(void)
 
 // starting the implementation
 int 
-sys_getpinfo(struct pstat * ptr)
+sys_getpinfo(void)
 {
   
 }

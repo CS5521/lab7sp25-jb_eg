@@ -14,6 +14,7 @@ typedef struct {
 
 typedef pstat_t pstatTable[NPROC];
 
+extern void fillpstat(pstatTable *);
 void getpinfo(pstatTable *);
 
 #endif

@@ -25,7 +25,7 @@ int sleep(int);
 int uptime(void);
 
 // added getpinfo 
-int getpinfo(struct pstat * ptr);
+int getpinfo(struct pstatTable *);
 
 // ulib.c
 int stat(const char*, struct stat*);
