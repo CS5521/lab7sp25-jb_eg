@@ -24,9 +24,8 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 
-// added getpinfo 
-// int getpinfo(struct pstatTable *);
-// dont need this here because it is declared in pstat.h
+// adding settickets sys call
+int settickets(int);
 
 // ulib.c
 int stat(const char*, struct stat*);

@@ -184,6 +184,8 @@ growproc(int n)
   return 0;
 }
 
+
+
 // Create a new process copying p as the parent.
 // Sets up stack to return as if from system call.
 // Caller must set state of returned proc to RUNNABLE.
@@ -220,6 +222,7 @@ fork(void)
   } else {
     np->tickets = 10;
   }
+
 
   for(i = 0; i < NOFILE; i++)
     if(curproc->ofile[i])
@@ -560,11 +563,26 @@ void fillpstat(pstatTable * ptr) {
   //ticks
   //name[16]
   //state
+
+  // randomly added this to clear out garbage and it works
+  int t = 0; 
+  for (t = 0; t < NPROC; t++) {
+    (*ptr)[t].inuse = 0;
+    (*ptr)[t].tickets = 0;
+    (*ptr)[t].pid = 0;
+    (*ptr)[t].ticks = 0;
+    (*ptr)[t].state = ' ';
+    (*ptr)[t].name[0] = '\0';
+  }
+  
+
   int i = 0;
   struct proc *p;
+
   
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
     if(p->state == UNUSED) {
+      // (*ptr)[i].inuse = 0;
       continue;
     } 
 
@@ -575,11 +593,15 @@ void fillpstat(pstatTable * ptr) {
       
     // this is to copy the string from p to ptr
     // did it like this because got errors trying to include <string.h>
+
     int j = 0;
-    while(j < sizeof((*ptr)[i].name) - 1 && p->name[j] != '\0') {
+    while(j < sizeof((*ptr)[i].name) -1 && p->name[j] != '\0') {
       (*ptr)[i].name[j] = p->name[j];
       j++;
     }
+    // check for overflow
+    (*ptr)[i].name[j] = '\0';
+
 
     switch(p->state) {
       case EMBRYO:

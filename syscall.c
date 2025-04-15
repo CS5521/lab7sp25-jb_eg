@@ -107,6 +107,7 @@ extern int sys_uptime(void);
 
 // will try it as an extern in first
 extern int sys_getpinfo(void);
+extern int sys_settickets(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -133,6 +134,7 @@ static int (*syscalls[])(void) = {
 
 // adding getpinfo
 [SYS_getpinfo] sys_getpinfo,
+[SYS_settickets] sys_settickets,
 };
 
 void

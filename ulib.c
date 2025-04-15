@@ -114,18 +114,16 @@ void ps() {
 
   getpinfo(&p);
 
-  printf(0, "PID     TKTS     TCKS     STAT     NAME\n");
-  // printf(0,"%-8s %-8s %-8s %-8s %-16s\n", "PID", "TKTS", "TCKS", "STAT", "NAME");
+  printf(0, "PID\tTKTS\tTCKS\tSTAT\tNAME\n");
 
   int i;
   for(i = 0; i < NPROC; i++) {
-    if(p[i].inuse) {
-      printf(0, "%d     %d     %d     %c     %s\n",
-      p[i].pid,
-      p[i].tickets,
-      p[i].ticks,
-      p[i].state,
-      p[i].name);
-    }
+    if(p[i].inuse == 0) continue;
+    printf(1, "%d\t%d\t%d\t%c\t%s\n",
+    p[i].pid,
+    p[i].tickets,
+    p[i].ticks,
+    p[i].state,
+    p[i].name);
   }
 }
