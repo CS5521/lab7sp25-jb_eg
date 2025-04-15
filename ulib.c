@@ -4,6 +4,9 @@
 #include "user.h"
 #include "x86.h"
 
+// adding pstat.h 
+#include "pstat.h"
+
 char*
 strcpy(char *s, const char *t)
 {
@@ -103,4 +106,26 @@ memmove(void *vdst, const void *vsrc, int n)
   while(n-- > 0)
     *dst++ = *src++;
   return vdst;
+}
+
+// implementation for ps()
+void ps() {
+  pstatTable p;
+
+  getpinfo(&p);
+
+  printf(0, "PID     TKTS     TCKS     STAT     NAME\n");
+  // printf(0,"%-8s %-8s %-8s %-8s %-16s\n", "PID", "TKTS", "TCKS", "STAT", "NAME");
+
+  int i;
+  for(i = 0; i < NPROC; i++) {
+    if(p[i].inuse) {
+      printf(0, "%d     %d     %d     %c     %s\n",
+      p[i].pid,
+      p[i].tickets,
+      p[i].ticks,
+      p[i].state,
+      p[i].name);
+    }
+  }
 }

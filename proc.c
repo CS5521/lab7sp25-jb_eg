@@ -7,6 +7,9 @@
 #include "proc.h"
 #include "spinlock.h"
 
+// added sting.h for strcpy function
+// #include <string.h>
+
 // including pstat.h
 #include "pstat.h" 
 
@@ -549,5 +552,61 @@ procdump(void)
 }
 
 void fillpstat(pstatTable * ptr) {
+  // traverse the proc array and grab the fields tickets, ticks, name, pid, inuse
+  // will need to update the fields in ptr...
+  //inuse
+  //tickets
+  //pid
+  //ticks
+  //name[16]
+  //state
+  int i = 0;
+  struct proc *p;
   
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+    if(p->state == UNUSED) {
+      continue;
+    } 
+
+    (*ptr)[i].inuse = 1;
+    (*ptr)[i].tickets = p->tickets;
+    (*ptr)[i].pid = p->pid;
+    (*ptr)[i].ticks = p->ticks;
+      
+    // this is to copy the string from p to ptr
+    // did it like this because got errors trying to include <string.h>
+    int j = 0;
+    while(j < sizeof((*ptr)[i].name) - 1 && p->name[j] != '\0') {
+      (*ptr)[i].name[j] = p->name[j];
+      j++;
+    }
+
+    switch(p->state) {
+      case EMBRYO:
+      (*ptr)[i].state = 'E';
+      break;
+
+      case SLEEPING:
+      (*ptr)[i].state = 'S';
+      break;
+
+      case RUNNABLE:
+      (*ptr)[i].state = 'A';
+      break;
+
+      case RUNNING:
+      (*ptr)[i].state = 'R';
+      break;
+
+      case ZOMBIE:
+      (*ptr)[i].state = 'Z';
+      break;
+
+      default:
+      continue;
+
+    }
+    i++;
+    
+  }
 }

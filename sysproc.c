@@ -7,6 +7,9 @@
 #include "mmu.h"
 #include "proc.h"
 
+// adding an include to pstat.h
+#include "pstat.h"
+
 int
 sys_fork(void)
 {
@@ -91,9 +94,21 @@ sys_uptime(void)
 }
 
 // starting the implementation
-extern void fillpstat(struct pstatTable *);
+extern void fillpstat(pstatTable *);
 int 
 sys_getpinfo(void)
 {
-  
+  // get the parameter out of the stack
+  pstatTable *n; 
+  // if(argptr(0, (void*)&n, sizeof(*n)) < 0) {
+  //   return -1;
+  // }
+  if(argptr(0, (void*)&n, sizeof(pstat_t) * NPROC) < 0) {
+    return -1;
+  }
+
+  // calls fillspat which is implemented in proc.c
+  fillpstat(n);
+
+  return 0;
 }
