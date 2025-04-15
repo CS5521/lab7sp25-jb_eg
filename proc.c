@@ -13,6 +13,14 @@
 // including pstat.h
 #include "pstat.h" 
 
+// things for the scheduler 
+#define RAND_MAX ((1U << 31) -1 )
+static int rseed = 1898888478;
+
+int random() {
+  return rseed = (rseed * 1103515245 + 12345) & RAND_MAX;
+}
+
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];
@@ -353,6 +361,26 @@ scheduler(void)
 
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
+
+    // this iw=s total tickets
+    int tt = 0;
+    // this loops and see what all the running processes to give a ticket to
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+      if(p->state == RUNNABLE) {
+        tt += p->tickets;
+      }
+    }
+
+    // if there are no tickets release lock and go back through loop
+    if(tt == 0) {
+      release(&ptable.lock);
+      continue;
+    }
+
+    // pick a number for the lottery 
+    int winner = random() % tt;
+    int numProcesses = 0;
+
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->state != RUNNABLE)
         continue;
@@ -360,16 +388,27 @@ scheduler(void)
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
-      c->proc = p;
-      switchuvm(p);
-      p->state = RUNNING;
+      numProcesses += p->tickets;
+      if(numProcesses > winner) {
+        c->proc = p;
+        switchuvm(p);
+        p->state = RUNNING;
+        p->ticks++;
+        swtch(&(c->scheduler), p->context);
+        switchkvm();
+        c->proc = 0;
+        break;
+      }
+      // c->proc = p;
+      // switchuvm(p);
+      // p->state = RUNNING;
 
-      swtch(&(c->scheduler), p->context);
-      switchkvm();
+      // swtch(&(c->scheduler), p->context);
+      // switchkvm();
 
       // Process is done running for now.
       // It should have changed its p->state before coming back.
-      c->proc = 0;
+      // c->proc = 0;
     }
     release(&ptable.lock);
 
